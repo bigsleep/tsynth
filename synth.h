@@ -61,8 +61,6 @@ namespace TSynth{
         mutex_type m_mutex;
         mutex_type m_state_mutex;
         mutex_type m_midi_event_mutex;
-        mutex_type m_on_pcm_mutex;
-        mutex_type m_on_midi_mutex;
         
         // private member functions
         void OnPcm();

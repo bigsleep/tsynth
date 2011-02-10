@@ -40,14 +40,20 @@ namespace TSynth{
         {
             Real tmp = static_cast<Real>(SynthModBase::GetSampleRate()) * _ac;
             m_attack = static_cast<std::size_t>(tmp);
-            m_attack_rate = 1.0 / tmp;
+            if(m_attack != 0)
+                m_attack_rate = 1.0 / tmp;
+            else
+                m_attack_rate = 0.0;
         }
         
         inline void SetDecay(Real _dc)
         {
             Real tmp = static_cast<Real>(SynthModBase::GetSampleRate()) * _dc;
             m_decay = static_cast<std::size_t>(tmp);
-            m_delta_phase_decay = static_cast<Real>(Constants::inv_exp_table_size) / tmp;
+            if(m_decay != 0)
+                m_delta_phase_decay = static_cast<Real>(Constants::inv_exp_table_size) / tmp;
+            else
+                m_delta_phase_decay = 0.0;
         }
         
         inline void SetSustain(Real _sl)
@@ -62,7 +68,10 @@ namespace TSynth{
         {
             Real tmp = static_cast<Real>(SynthModBase::GetSampleRate()) * _rc;
             m_release = static_cast<std::size_t>(tmp);
-            m_delta_phase_release = static_cast<Real>(Constants::inv_exp_table_size) / tmp;
+            if(m_release != 0)
+                m_delta_phase_release = static_cast<Real>(Constants::inv_exp_table_size) / tmp;
+            else
+                m_delta_phase_release = 0.0;
         }
         
         inline void SetADSR(ADSR const& _adsr)

@@ -58,25 +58,24 @@ namespace TSynth{
         switch(GetState()){
             case EGState::ATTACK:
             {
-                Real val = (m_attack_rate * (Real)m_phase);
-                ++m_phase;
-                if(m_phase >= m_attack){
+                if(m_phase < m_attack){
+                    m_last_val = (m_attack_rate * (Real)m_phase);
+                    ++m_phase;
+                    return m_last_val;
+                }else{
                     SetState(EGState::DECAY);
                 }
-                m_last_val = val;
-                return (val);
             }
             case EGState::DECAY:
             {
-                Real n1 = m_delta_phase_decay * (Real)m_phase;
-                Real val = (1.0 - m_sustain) * inv_exp_table[std::size_t(n1)];
-                val += m_sustain;
-                ++m_phase;
-                if(m_phase >= m_decay){
+                if(m_phase < m_decay){
+                    Real n1 = m_delta_phase_decay * (Real)m_phase;
+                    m_last_val = (1.0 - m_sustain) * inv_exp_table[std::size_t(n1)] + m_sustain;
+                    ++m_phase;
+                    return m_last_val;
+                }else{
                     SetState(EGState::SUSTAIN);
                 }
-                m_last_val = val;
-                return (val);
             }
             case EGState::SUSTAIN:
             {
@@ -85,14 +84,14 @@ namespace TSynth{
             }
             case EGState::RELEASE:
             {
-                Real n1 = m_delta_phase_release * (Real)m_phase;
-                Real val = m_release_level * inv_exp_table[std::size_t(n1)];
-                ++m_phase;
-                if(m_phase >= m_release){
+                if(m_phase < m_release){
+                    Real n1 = m_delta_phase_release * (Real)m_phase;
+                    m_last_val = m_release_level * inv_exp_table[std::size_t(n1)];
+                    ++m_phase;
+                    return m_last_val;
+                }else{
                     SetState(EGState::OFF);
                 }
-                m_last_val = val;
-                return (val);
             }
             case EGState::OFF:
             default:
